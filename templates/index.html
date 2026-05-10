@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Churn Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>📊 Customer Churn Predictor</h1>
+    <p>Fill in the customer details to predict churn</p>
+  </div>
+
+  <form id="churnForm">
+
+    <div class="section-title">👤 Personal Info</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Gender</label>
+        <select name="gender">
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Senior Citizen</label>
+        <select name="SeniorCitizen">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Partner</label>
+        <select name="Partner">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Dependents</label>
+        <select name="Dependents">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title">📞 Services</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tenure (months)</label>
+        <input type="number" name="tenure" value="12" min="0" max="72"/>
+      </div>
+      <div class="form-group">
+        <label>Phone Service</label>
+        <select name="PhoneService">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Multiple Lines</label>
+        <select name="MultipleLines">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="No phone service">No Phone Service</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Internet Service</label>
+        <select name="InternetService">
+          <option value="DSL">DSL</option>
+          <option value="Fiber optic">Fiber Optic</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Online Security</label>
+        <select name="OnlineSecurity">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="No internet service">No Internet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Online Backup</label>
+        <select name="OnlineBackup">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="No internet service">No Internet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Device Protection</label>
+        <select name="DeviceProtection">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="No internet service">No Internet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tech Support</label>
+        <select name="TechSupport">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="No internet service">No Internet</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Streaming TV</label>
+        <select name="StreamingTV">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="No internet service">No Internet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Streaming Movies</label>
+        <select name="StreamingMovies">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+          <option value="No internet service">No Internet</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-title">💳 Billing</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Contract</label>
+        <select name="Contract">
+          <option value="Month-to-month">Month-to-month</option>
+          <option value="One year">One Year</option>
+          <option value="Two year">Two Year</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Paperless Billing</label>
+        <select name="PaperlessBilling">
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select name="PaymentMethod">
+          <option value="Electronic check">Electronic Check</option>
+          <option value="Mailed check">Mailed Check</option>
+          <option value="Bank transfer (automatic)">Bank Transfer</option>
+          <option value="Credit card (automatic)">Credit Card</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Monthly Charges ($)</label>
+        <input type="number" name="MonthlyCharges" value="65" step="0.01"/>
+      </div>
+      <div class="form-group">
+        <label>Total Charges ($)</label>
+        <input type="number" name="TotalCharges" value="780" step="0.01"/>
+      </div>
+    </div>
+
+    <button type="button" onclick="predict()">🔍 Predict Churn</button>
+  </form>
+
+  <div id="result" class="result-box hidden"></div>
+</div>
+
+<script>
+  async function predict() {
+    const form     = document.getElementById('churnForm');
+    const resultEl = document.getElementById('result');
+    const formData = new FormData(form);
+
+    resultEl.className = 'result-box loading';
+    resultEl.innerHTML = '<p>⏳ Predicting...</p>';
+
+    try {
+      const res  = await fetch('/predict', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (data.error) {
+        resultEl.className = 'result-box error';
+        resultEl.innerHTML = `<h2>❌ Error</h2><p>${data.error}</p>`;
+      } else {
+        const icon = data.color === 'red' ? '⚠️' : '✅';
+        resultEl.className = `result-box ${data.color}`;
+        resultEl.innerHTML = `
+          <h2>${icon} ${data.prediction}</h2>
+          <p>Churn Probability: <strong>${data.probability}</strong></p>
+        `;
+      }
+    } catch (err) {
+      resultEl.className = 'result-box error';
+      resultEl.innerHTML = `<h2>❌ Network Error</h2><p>${err.message}</p>`;
+    }
+  }
+</script>
+
+</body>
+</html>
