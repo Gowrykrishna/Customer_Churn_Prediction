@@ -10,13 +10,13 @@
 
 <div class="container">
   <div class="header">
-    <h1>📊 Customer Churn Predictor</h1>
+    <h1>Customer Churn Predictor</h1>
     <p>Fill in the customer details to predict churn</p>
   </div>
 
   <form id="churnForm">
 
-    <div class="section-title">👤 Personal Info</div>
+    <div class="section-title">Personal Info</div>
     <div class="form-row">
       <div class="form-group">
         <label>Gender</label>
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="section-title">📞 Services</div>
+    <div class="section-title">Services</div>
     <div class="form-row">
       <div class="form-group">
         <label>Tenure (months)</label>
@@ -133,7 +133,7 @@
       </div>
     </div>
 
-    <div class="section-title">💳 Billing</div>
+    <div class="section-title">Billing</div>
     <div class="form-row">
       <div class="form-group">
         <label>Contract</label>
@@ -193,7 +193,7 @@
 
       if (data.error) {
         resultEl.className = 'result-box error';
-        resultEl.innerHTML = `<h2>❌ Error</h2><p>${data.error}</p>`;
+        resultEl.innerHTML = `<h2>Error</h2><p>${data.error}</p>`;
       } else {
         const icon = data.color === 'red' ? '⚠️' : '✅';
         resultEl.className = `result-box ${data.color}`;
@@ -204,7 +204,7 @@
       }
     } catch (err) {
       resultEl.className = 'result-box error';
-      resultEl.innerHTML = `<h2>❌ Network Error</h2><p>${err.message}</p>`;
+      resultEl.innerHTML = `<h2>Network Error</h2><p>${err.message}</p>`;
     }
   }
 </script>
